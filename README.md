@@ -1,3 +1,5 @@
+# makeup-store
+
 <p align="center"><img src="https://i.imgur.com/NrkTPe9.png"></p>
 
 ## Usage
@@ -40,3 +42,4 @@ $ yarn build (or `npm run build` or `pnpm run build`)
 ## Resources
 
 <https://ant.design>
+
