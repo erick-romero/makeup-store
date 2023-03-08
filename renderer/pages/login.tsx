@@ -8,24 +8,25 @@ import {
     Form,
   Input,
   Layout,
+  message,
   Result} from 'antd';
 import Router, { useRouter } from 'next/router';
 import axios from 'axios';
-import { V4MAPPED } from 'dns';
 
 const {
   Content,
 } = Layout;
-
+const _ = require("lodash")
 const onFinish = async (values: any) => {
-    console.log('Success:', typeof values);
-    var object = {
-        contraseña:values["contraseña"],
-        userId: values["userId"]
+   
+    var response = await axios.post("/api/auth/login",values);
+    
+    if(response.data.user){
+      Router.push("/ventas")
+    } else {
+      message.error("Las credenciales ingresadas no son correctas.")
     }
-    var response = await axios.postForm("/api/auth/login",object);
-    console.log(response);
-    //Router.push("/home")
+    
   };
   
   const onFinishFailed = (errorInfo: any) => {
@@ -56,7 +57,7 @@ function Login() {
     <Form.Item
       label="Numero de Empleado"
       name="userId"
-      rules={[{ required: true, message: 'Please input your username!' }]}
+      rules={[{ required: true, message: 'Ingresa tu numero de empleado!' }]}
     >
       <Input />
     </Form.Item>
@@ -64,7 +65,7 @@ function Login() {
     <Form.Item
       label="Contraseña"
       name="contraseña"
-      rules={[{ required: true, message: 'Please input your password!' }]}
+      rules={[{ required: true, message: 'Ingresa tu contraseña!' }]}
     >
       <Input.Password />
     </Form.Item>
@@ -75,7 +76,7 @@ function Login() {
         Submit
       </Button>
     </Form.Item>
-  </Form>
+      </Form>
       </Content>
     </React.Fragment>
   );

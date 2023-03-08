@@ -1,101 +1,87 @@
-import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import {
-  Layout,
-  Form,
-  Select,
-  InputNumber,
-  DatePicker,
-  Switch,
-  Slider,
-  Button,
-} from 'antd';
-import { useRouter } from 'next/router';
+  HomeOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  ScheduleOutlined,
+  SettingOutlined,
+  ShopOutlined,
+  ShoppingCartOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Layout, Menu, theme } from 'antd';
+import { Router, useRouter } from 'next/router';
 
-const {
-  Header,
-  Content,
-} = Layout;
-const { Item: FormItem } = Form;
-const { Option } = Select;
+const { Header, Sider, Content } = Layout;
 
-function Home() {
-const router = useRouter
-
+const Home: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter()
   return (
-    <React.Fragment>
-      <Head>
-        <title>Home</title>
-      </Head>
-
-      <Header>
-        <Link href="/next">
-          <a>Go to next page</a>
-        </Link>
-      </Header>
-
-      <Content style={{ padding: 48 }}>
-        <Form layout='horizontal'>
-          <FormItem
-            label='Input Number'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <InputNumber size='large' min={1} max={10} style={{ width: 100 }} defaultValue={3} name='inputNumber' />
-            <a href='#'>Link</a>
-          </FormItem>
-
-          <FormItem
-            label='Switch'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Switch defaultChecked />
-          </FormItem>
-
-          <FormItem
-            label='Slider'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Slider defaultValue={70} />
-          </FormItem>
-
-          <FormItem
-            label='Select'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Select size='large' defaultValue='lucy' style={{ width: 192 }}>
-              <Option value='jack'>jack</Option>
-              <Option value='lucy'>lucy</Option>
-              <Option value='disabled' disabled>disabled</Option>
-              <Option value='yiminghe'>yiminghe</Option>
-            </Select>
-          </FormItem>
-
-          <FormItem
-            label='DatePicker'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <DatePicker name='startDate' />
-          </FormItem>
-          <FormItem
-            style={{ marginTop: 48 }}
-            wrapperCol={{ span: 8, offset: 8 }}
-          >
-            <Button size='large' type='primary' htmlType='submit'>
-              OK
-            </Button>
-            <Button size='large' style={{ marginLeft: 8 }}>
-              Cancel
-            </Button>
-          </FormItem>
-        </Form>
-      </Content>
-    </React.Fragment>
+    <Layout>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="logo" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          items={[
+            {
+              key: '1',
+              icon: <ShopOutlined />,
+              label: 'Ventas',
+              onClick : () => {
+                router.push("/ventas")
+              }
+            },
+            {
+              key: '2',
+              icon: <ShoppingCartOutlined />,
+              label: 'Compras',
+              onClick : () => {
+                router.push("/compras")
+              }
+            },
+            {
+              key: '3',
+              icon: <ScheduleOutlined />,
+              label: 'Inventario',
+              onClick : () => {
+                router.push("/inventario")
+              }
+            },
+            {
+              key: '4',
+              icon: <SettingOutlined />,
+              label: 'Configuracion',
+              onClick : () => {
+                router.push("/configuracion")
+              }
+            },
+          ]}
+        />
+      </Sider>
+      <Layout className="site-layout">
+        <Header style={{ padding: 0}}>
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: 'trigger',
+            onClick: () => setCollapsed(!collapsed),
+          })}
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 280,
+            height: "100vh"
+          }}
+        >
+          Content
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
