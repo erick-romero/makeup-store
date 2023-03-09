@@ -12,16 +12,20 @@ import {
   Result} from 'antd';
 import Router, { useRouter } from 'next/router';
 import axios from 'axios';
+import electron from 'electron';
 
+const ipcRenderer = electron.ipcRenderer;
 const {
   Content,
 } = Layout;
 const _ = require("lodash")
 const onFinish = async (values: any) => {
    
-    var response = await axios.post("/api/auth/login",values);
+    var response = ipcRenderer.sendSync('login', JSON.stringify(values));;
+    response = JSON.parse(response)
+    console.log(response);
     
-    if(response.data.user){
+    if(response.success){
       Router.push("/ventas")
     } else {
       message.error("Las credenciales ingresadas no son correctas.")
@@ -64,7 +68,7 @@ function Login() {
 
     <Form.Item
       label="Contraseña"
-      name="contraseña"
+      name="contrasena"
       rules={[{ required: true, message: 'Ingresa tu contraseña!' }]}
     >
       <Input.Password />

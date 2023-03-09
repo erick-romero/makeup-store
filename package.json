@@ -10,6 +10,13 @@
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps"
   },
+  "build":{
+    "extraResources": [
+      "prisma/**/*",
+      "node_modules/.prisma/**/*",
+      "node_modules/@prisma/client/**/*"
+  ]
+  },
   "dependencies": {
     "@ant-design/cssinjs": "^1.6.1",
     "@babel/plugin-proposal-decorators": "^7.21.0",

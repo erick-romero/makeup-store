@@ -23,27 +23,27 @@ const ipcRenderer = electron.ipcRenderer;
     {
       title: 'Nombre',
       dataIndex: 'Nombre',
-      key: 'nombre',
+      key: 'Nombre',
     },
     {
       title: 'Descripcion',
       dataIndex: 'Descripcion',
-      key: 'address',
+      key: 'Descripcion',
     },
     {
       title: 'Costo',
       dataIndex: 'Costo',
-      key: 'costo',
+      key: 'Costo',
     },
     {
       title: 'Precio',
       dataIndex: 'Precio',
-      key: 'precio',
+      key: 'Precio',
     },
     {
       title: 'Inventario',
       dataIndex: 'Inventario',
-      key: 'inventario',
+      key: 'Inventario',
     },
   ];
 
@@ -54,7 +54,15 @@ function Configuracion() {
   const [data, setData] = useState(null)
 
   const onFinish = async (values: any) => { 
-      ipcRenderer.sendSync('addProduct', values);
+      var response = ipcRenderer.sendSync('addProduct', JSON.stringify(values));
+      if(response){
+        message.success("Producto creado Correctamente.");
+        const response = ipcRenderer.sendSync('getAllProducts', '');
+        setData(JSON.parse(response));
+      } else {
+        message.error("Hubo un error, intente de nuevo");
+      }
+      setIsModalOpen(false)
   };
 
   useEffect(() => {
