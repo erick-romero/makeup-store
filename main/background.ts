@@ -1,6 +1,9 @@
-import { app } from 'electron';
+import { app,ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
@@ -30,3 +33,23 @@ if (isProd) {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+ipcMain.on('getAllProducts', async (event, arg) => {
+    var products = await prisma.producto.findMany({include: {
+      Marca:true,
+      Categoria: true,
+      Proveedor: true
+    }});
+    event.returnValue = JSON.stringify(products);
+});
+
+ipcMain.on('addProduct', async (event, arg) => {
+  var products = await prisma.producto.findMany({include: {
+    Marca:true,
+    Categoria: true,
+    Proveedor: true
+  }});
+  event.returnValue = JSON.stringify(products);
+});
+
+

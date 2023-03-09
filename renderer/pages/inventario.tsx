@@ -4,9 +4,10 @@ import { Button, Form, Input, InputNumber, Layout, Menu, Modal, Select, Table, m
 import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import Router, { useRouter } from 'next/router';
 import axios from 'axios';
+import electron from 'electron';
 
 const { Header, Sider, Content } = Layout;
-
+const ipcRenderer = electron.ipcRenderer;
 
   
   const onFinishFailed = (errorInfo: any) => {
@@ -52,23 +53,13 @@ function Configuracion() {
 
   const [data, setData] = useState(null)
 
-  const onFinish = async (values: any) => {
-   
-    var response = await axios.post("/api/product/add",values);
-    
-    console.log(response.status == 200);
-    if(response.status == 200){
-      axios.get("/api/product/getAll").then(x => {
-        setData(x.data.products)
-      })
-    }
-    
-    
+  const onFinish = async (values: any) => { 
+      ipcRenderer.sendSync('addProduct', values);
   };
+
   useEffect(() => {
-    axios.get("/api/product/getAll").then(x => {
-      setData(x.data.products)
-    })
+    const response = ipcRenderer.sendSync('getAllProducts', '');
+    setData(JSON.parse(response));
   },[])
 
     const [collapsed, setCollapsed] = useState(false);
