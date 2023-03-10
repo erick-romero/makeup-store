@@ -93,3 +93,38 @@ ipcMain.on('login', async (event,args) => {
 
    
 });
+
+ipcMain.on('getAllUsers', async (event, args) => {
+  var users = await prisma.usuario.findMany({include: {
+    Tipo_Usuario:true
+  }});
+  
+  event.returnValue = JSON.stringify(users);
+});
+
+ipcMain.on('addUser', async (event, args) => {
+var props = JSON.parse(args)
+console.log(props);
+
+try {
+  await prisma.usuario.create({
+    data:{
+        Tipo_Usuario_Id: parseInt(props.tipoUsuario),
+        nombre: props.nombre,
+        apellido: props.apellido,
+        correo_electronico: props.correo,
+        telefono: props.telefono,
+        contrasena: props.contrasena
+    }
+   })
+console.log(props);
+
+   event.returnValue = true;
+} catch (error) {
+  console.log(error);
+  event.returnValue = false;
+}
+
+
+ 
+});

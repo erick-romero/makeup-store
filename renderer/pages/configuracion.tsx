@@ -1,14 +1,42 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { Layout, Menu } from 'antd';
+import { Button, Form, Input, InputNumber, Layout, Menu, Select, Table, Tabs, TabsProps } from 'antd';
 import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import UsersTab from '../components/UsersTab';
 
 
+const onChange = (key: string) => {
+  
+};
 
+const items: TabsProps['items'] = [
+  {
+    key: '1',
+    label: `Usuarios`,
+    children: (
+      <UsersTab></UsersTab>
+    ),
+  },
+  {
+    key: '2',
+    label: `Proveedores`,
+    children: `Content of Tab Pane 2`,
+  },
+  {
+    key: '3',
+    label: `Categorias`,
+    children: `Content of Tab Pane 3`,
+  },
+  {
+    key: '4',
+    label: `Marcas`,
+    children: `Content of Tab Pane 3`,
+  },
+];
 const { Header, Sider, Content } = Layout;
 function Configuracion() {
-
+  
    
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter()
@@ -72,7 +100,7 @@ function Configuracion() {
               height: "100vh"
             }}
           >
-            Configuracion
+            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
           </Content>
         </Layout>
       </Layout>
@@ -80,3 +108,4 @@ function Configuracion() {
 };
 
 export default Configuracion;
+

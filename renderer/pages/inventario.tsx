@@ -10,9 +10,7 @@ const { Header, Sider, Content } = Layout;
 const ipcRenderer = electron.ipcRenderer;
 
   
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
+  
 
   const columns = [
     {
@@ -157,7 +155,6 @@ function Configuracion() {
                 style={{ maxWidth: 600 }}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 
             >
@@ -232,7 +229,7 @@ function Configuracion() {
         Submit
       </Button>
     </Form.Item>
-      </Form>
+            </Form>
             </Modal>
 
             <Table dataSource={data} columns={columns} />;  
