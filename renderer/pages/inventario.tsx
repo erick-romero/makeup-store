@@ -147,7 +147,7 @@ function Configuracion() {
             <Button type="primary" onClick={showModal}>
                 Agregar producto
             </Button>
-            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer={null} title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <Form
                 name="basic"
                 labelCol={{ span: 8 }}

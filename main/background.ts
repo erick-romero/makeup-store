@@ -128,3 +128,64 @@ console.log(props);
 
  
 });
+
+ipcMain.on('getFilteredProducts', async (event, args) => {
+
+  var products = await prisma.producto.findMany({include: {
+    Marca:true,
+    Categoria: true,
+    Proveedor: true
+  }});
+  
+  event.returnValue = JSON.stringify(products);
+});
+
+ipcMain.on('addSale', async (event, args) => {
+
+
+  var props = args
+ 
+  
+  try {
+     var precio_total = props.reduce((accumulator, object) => {
+      return accumulator + (object.cantidad * object.product.Precio);
+    }, 0)
+    await prisma.venta.create({
+      data:{
+        
+          Usuario_Id: 1,
+          Precio_Total: precio_total,
+          Fecha_Venta: new Date(),
+          
+      }
+     })
+     const latestQuery = await prisma.venta.findMany({
+      orderBy: {
+          id: 'desc',
+      },
+      take: 1,
+    })
+    
+    
+for (let obj of props){
+  console.log(obj);
+  
+  await prisma.detalle_Venta.create({
+    data:{
+        Venta_Id: latestQuery[0].id,
+        Producto_Id: obj.product.id,
+        Cantidad:obj.cantidad
+    }
+   })
+}
+    
+     event.returnValue = true;
+  } catch (error) {
+    console.log(error);
+    
+    event.returnValue = false;
+  }
+
+  //Falta restar el stock de los productos
+});
+
