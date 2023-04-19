@@ -137,6 +137,10 @@ ipcMain.on('getFilteredProducts', async (event, args) => {
     Proveedor: true
   }});
   
+  if(args != ""){
+    products = products.filter(x => x.Nombre.toLowerCase().includes(args.toLowerCase()))
+  }
+
   event.returnValue = JSON.stringify(products);
 });
 
@@ -177,7 +181,18 @@ for (let obj of props){
         Cantidad:obj.cantidad
     }
    })
+
+   await prisma.producto.update({
+    where:{
+      id: obj.product.id
+    },
+    data:{
+      Inventario: obj.product.Inventario - obj.cantidad
+    }
+   })
 }
+
+
     
      event.returnValue = true;
   } catch (error) {

@@ -14,9 +14,7 @@ const { Header, Sider, Content } = Layout;
 
 
 function Configuracion() {
-  function onSearch() {
-
-  }
+  
   function addSale(){
     const response = ipcRenderer.sendSync('addSale', carrito);
     console.log(response);
@@ -43,7 +41,10 @@ function Configuracion() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProd, setSelectedProd] = useState({Inventario:0,Nombre:""});
-
+  const onSearch = (value: string) => {
+    const response = ipcRenderer.sendSync('getFilteredProducts', value);
+    setData(JSON.parse(response));
+  }
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -129,7 +130,7 @@ function Configuracion() {
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
-              height: "100vh"
+              height: "calc(100% - 64px)"
             }}
           >
             
@@ -178,7 +179,7 @@ function Configuracion() {
                           name="Cantidad"
                           rules={[{ required: true, message: 'Ingresa la cantida que quieras agregar' }]}
                         >
-                          <InputNumber min={1} max={selectedProd.Inventario || 0} defaultValue={1} />
+                          <InputNumber min={1} value={1} max={selectedProd.Inventario || 0} defaultValue={1}  />
                         </Form.Item>
 
 

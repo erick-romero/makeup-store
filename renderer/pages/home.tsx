@@ -75,7 +75,7 @@ const Home: React.FC = () => {
             margin: '24px 16px',
             padding: 24,
             minHeight: 280,
-            height: "100vh"
+            height: "calc(100% - 64px)"
           }}
         >
           Content
