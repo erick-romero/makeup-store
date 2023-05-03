@@ -4,6 +4,9 @@ import { Button, Form, Input, InputNumber, Layout, Menu, Select, Table, Tabs, Ta
 import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import UsersTab from '../components/UsersTab';
+import ProvidersTab from '../components/ProvidersTab';
+import CategoryTab from '../components/CategoryTab';
+import MarcasTab from '../components/MarcasTab';
 
 
 const onChange = (key: string) => {
@@ -21,17 +24,23 @@ const items: TabsProps['items'] = [
   {
     key: '2',
     label: `Proveedores`,
-    children: `Content of Tab Pane 2`,
+    children: (
+      <ProvidersTab></ProvidersTab>
+    ),
   },
   {
     key: '3',
     label: `Categorias`,
-    children: `Content of Tab Pane 3`,
+    children: (
+      <CategoryTab></CategoryTab>
+    ),
   },
   {
     key: '4',
     label: `Marcas`,
-    children: `Content of Tab Pane 3`,
+    children: (
+      <MarcasTab></MarcasTab>
+    ),
   },
 ];
 const { Header, Sider, Content } = Layout;
@@ -97,7 +106,7 @@ function Configuracion() {
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
-              height: "calc(100% - 64px)"
+              height: "100vh"
             }}
           >
             <Tabs defaultActiveKey="1" items={items} onChange={onChange} />

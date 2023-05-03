@@ -1,18 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Layout, Menu } from 'antd';
+import { Alert, Avatar, Button, Card, Col, Form, Input, InputNumber, Layout, List, Menu, Modal, Row, Select, message } from 'antd';
 import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-
-
-
+import Search from 'antd/lib/input/Search';
+import electron from 'electron';
+import { log } from 'console';
+const ipcRenderer = electron.ipcRenderer;
 const { Header, Sider, Content } = Layout;
+ interface car {
+  product:any,
+  cantidad:number
+ }
+
 
 function Configuracion() {
+  
+  function addCompra(){
+    const response = ipcRenderer.sendSync('addCompra', carrito);
+    console.log(response);
+    if(response){
+      message.success("Compra realizada con Exito")
+      //router.reload()
+    } else {
+      message.error("Hubo un error. Intenta de Nuevo")
+    }
+    
+  }
+  const onFinish = async (values: any) => { 
+    console.log(values);
+    var carritoTemp = carrito
+    if(carritoTemp.find(x => selectedProd.Nombre == x.product.Nombre)){
+      message.error("El producto ya esta en el carrito")
+      setIsModalOpen(false)
+      return
+    }
+    carritoTemp.unshift({product:selectedProd,cantidad:values.Cantidad})
+    setCarrito(carritoTemp)
+    setIsModalOpen(false)
+};
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProd, setSelectedProd] = useState({Inventario:0,Nombre:""});
+  const onSearch = (value: string) => {
+    const response = ipcRenderer.sendSync('getFilteredProducts', value);
+    setData(JSON.parse(response));
+  }
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  function selectProduct(item) {
+    
+    setSelectedProd(item)
+    showModal()
+  };
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+    const response = ipcRenderer.sendSync('getFilteredProductsByProvider', value);
+    setData(JSON.parse(response));
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter()
+    const [data, setData] = useState([])
+    const [provData, setProvData] = useState([])
+    const [carrito, setCarrito] = useState([] as car[])
+    useEffect(() => {
+      const response = ipcRenderer.sendSync('getAllProviders', '');
+      setProvData(JSON.parse(response).map(x => {return {label:x.Nombre,value:x.id}}));
+    }, [])
+    
     return (
+      
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
@@ -71,7 +139,107 @@ function Configuracion() {
               height: "100vh"
             }}
           >
-            Compras
+            
+            <Row>
+              <Col span={14}>
+              <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 200 }} />
+              <Row>
+              <Select
+              placeholder="Selecciona un Proveedor"
+              style={{ width: 300, marginTop:"10px" }}
+              onChange={handleChange}
+              options={provData}
+              />
+              </Row>
+              
+              
+              
+              <List
+              
+              pagination={{pageSize:20}}
+              style={{marginTop:"16px"}}
+                grid={{
+                  gutter: 16,
+                  xs: 1,
+                  sm: 2,
+                  md: 3,
+                  lg: 4,
+                  xl: 4,
+                  xxl: 5,
+                }}
+                dataSource={data}
+                renderItem={item => (
+                  <><List.Item onClick={() => selectProduct(item)}>
+
+                    <Card 
+                      size='small' className='cardHover' style={{ height: "150px" }}>
+                      <h4>{item.Nombre}</h4>
+                      <p> {"$" + item.Precio}</p>
+                      <p> {"Existencia: " + item.Inventario}</p>
+                    </Card>
+                  </List.Item></>
+                )}/>
+      <Modal footer={null} title={selectedProd.Nombre} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                      <Form
+                      
+                        name="basic"
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        style={{ maxWidth: 600 }}
+                        initialValues={{ remember: false }}
+                        onFinish={onFinish}
+                        autoComplete="off"
+
+                      >
+                        <Form.Item
+                          label="cantidad"
+                          name="Cantidad"
+                          rules={[{ required: true, message: 'Ingresa la cantida que quieras agregar' }]}
+                        >
+                          <InputNumber min={1} value={1} max={20} defaultValue={1}  />
+                        </Form.Item>
+
+
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                          <Button type="primary" htmlType="submit">
+                            Submit
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </Modal>
+              </Col>
+              <Col span={10}>
+                <h3 style={{textAlign:'center'}}>Carrito</h3>
+                <div className='carrito'>
+                  <div className='productos'>
+                  <List
+                 
+                    itemLayout="horizontal"
+                    dataSource={carrito}
+                    renderItem={(item, index) => (
+                      <List.Item style={{padding:"1px"}} >
+                        <Card style={{width:"100%", lineHeight:"10px"}}>
+                        <h4>{item.product.Nombre}</h4>
+                        <p> {"Precio Unitario: $" + item.product.Precio}</p>
+                        <p> {"Cantidad: " + item.cantidad}</p>
+                        <p> {"Precio Total: $" + item.cantidad * item.product.Precio }</p>
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                  </div>
+                  <div className='precioTotal'>
+                      <h3>Total: $ {carrito.reduce((accumulator, object) => {
+                        return accumulator + (object.cantidad * object.product.Precio);
+                      }, 0)}</h3>
+                      <h5>Cantidad de productos: {carrito.reduce((accumulator, object) => {
+                        return accumulator + (object.cantidad);
+                      }, 0)} </h5>
+                      <Button type='primary' onClick={() => addCompra()}>Comprar</Button>
+                  </div>
+                </div>
+              </Col>
+            </Row>
           </Content>
         </Layout>
       </Layout>

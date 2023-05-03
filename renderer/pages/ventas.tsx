@@ -20,7 +20,7 @@ function Configuracion() {
     console.log(response);
     if(response){
       message.success("Venta realizada con Exito")
-      router.reload()
+      //router.reload()
     } else {
       message.error("Hubo un error. Intenta de Nuevo")
     }
@@ -130,7 +130,7 @@ function Configuracion() {
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
-              height: "calc(100% - 64px)"
+              height: "100vh"
             }}
           >
             
@@ -157,7 +157,7 @@ function Configuracion() {
                     <Card 
                       size='small' className='cardHover' style={{ height: "150px" }}>
                       <h4>{item.Nombre}</h4>
-                      <p> {"$" + item.Precio}</p>
+                      <p> {"$" + item.Costo}</p>
                       <p> {"Existencia: " + item.Inventario}</p>
                     </Card>
                   </List.Item></>
@@ -203,9 +203,9 @@ function Configuracion() {
                       <List.Item style={{padding:"1px"}} >
                         <Card style={{width:"100%", lineHeight:"10px"}}>
                         <h4>{item.product.Nombre}</h4>
-                        <p> {"Precio Unitario: $" + item.product.Precio}</p>
+                        <p> {"Precio Unitario: $" + item.product.Costo}</p>
                         <p> {"Cantidad: " + item.cantidad}</p>
-                        <p> {"Precio Total: $" + item.cantidad * item.product.Precio }</p>
+                        <p> {"Precio Total: $" + item.cantidad * item.product.Costo }</p>
                         </Card>
                       </List.Item>
                     )}
@@ -213,7 +213,7 @@ function Configuracion() {
                   </div>
                   <div className='precioTotal'>
                       <h3>Total: $ {carrito.reduce((accumulator, object) => {
-                        return accumulator + (object.cantidad * object.product.Precio);
+                        return accumulator + (object.cantidad * object.product.Costo);
                       }, 0)}</h3>
                       <h5>Cantidad de productos: {carrito.reduce((accumulator, object) => {
                         return accumulator + (object.cantidad);

@@ -12,39 +12,20 @@ const columns = [
     },
     {
       title: 'Nombre',
-      dataIndex: 'nombre',
+      dataIndex: 'Nombre',
       key: 'nombre',
     },
-    {
-      title: 'Apellido',
-      dataIndex: 'apellido',
-      key: 'apellido',
-    },
-    {
-      title: 'Correo Electronico',
-      dataIndex: 'correo_electronico',
-      key: 'correo_electronico',
-    },
-    {
-      title: 'Telefono',
-      dataIndex: 'telefono',
-      key: 'telefono',
-    },
-    {
-      title: 'Contraseña',
-      dataIndex: 'contrasena',
-      key: 'contrasena',
-    },
+    
   ];
 
-function UsersTab() {
+function MarcasTab() {
     const [data, setData] = useState(null)
     
     function onFinishUser(values: any): void {
         var response = ipcRenderer.sendSync('addUser', JSON.stringify(values));
       if(response){
         message.success("Usuario creado Correctamente.");
-        const response = ipcRenderer.sendSync('getAllUsers', '');
+        const response = ipcRenderer.sendSync('getAllMarcas', '');
         setData(JSON.parse(response));
       } else {
         message.error("Hubo un error, intente de nuevo");
@@ -53,7 +34,7 @@ function UsersTab() {
         
       }
       useEffect(() => {
-        const response = ipcRenderer.sendSync('getAllUsers', '');
+        const response = ipcRenderer.sendSync('getAllMarcas', '');
         setData(JSON.parse(response));
       },[])
       const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,7 +55,7 @@ function UsersTab() {
     
     <>
     <Button type="primary" onClick={showModal}>
-                Agregar Nuevo Usuario
+                Agregar Nueva Marca
     </Button>
     <Modal footer={null} title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
     <Form
@@ -145,4 +126,4 @@ function UsersTab() {
   )
 }
 
-export default UsersTab
+export default MarcasTab

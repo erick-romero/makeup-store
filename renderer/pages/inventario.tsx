@@ -140,7 +140,7 @@ function Configuracion() {
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
-              height: "calc(100% - 64px)"
+              height: "100vh"
             }}
           >
 
@@ -187,7 +187,8 @@ function Configuracion() {
             rules={[{ required: true, message: 'Ingresa la marca del producto' }]}
             >
             <Select 
-            options={[{value:1,label:"Mac"}]}
+            options={[{value:1,label:"Mac"},{value:2,label:"Sephora"}]}
+            
             />
             </Form.Item>
             <Form.Item
@@ -196,7 +197,7 @@ function Configuracion() {
             rules={[{ required: true, message: 'Ingresa el proveedor del producto' }]}
             >
             <Select 
-            options={[{value:1,label:"Mac"}]}
+            options={[{value:1,label:"Mac"},{value:2,label:"Sephora"}]}
             />
             </Form.Item>
             <Form.Item

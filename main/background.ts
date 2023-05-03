@@ -2,6 +2,7 @@ import { app,ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import { PrismaClient } from "@prisma/client";
+import { log } from 'console';
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,7 @@ if (isProd) {
   });
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    await mainWindow.loadURL('app://./login.html');
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/login`);
@@ -143,6 +144,19 @@ ipcMain.on('getFilteredProducts', async (event, args) => {
 
   event.returnValue = JSON.stringify(products);
 });
+ipcMain.on('getFilteredProductsByProvider', async (event, args) => {
+
+  var products = await prisma.producto.findMany({include: {
+    Marca:true,
+    Categoria: true,
+    Proveedor: true
+  }});
+  console.log(products);
+  products = products.filter(x => x.Proveedor.id == args)
+  
+
+  event.returnValue = JSON.stringify(products);
+});
 
 ipcMain.on('addSale', async (event, args) => {
 
@@ -152,7 +166,7 @@ ipcMain.on('addSale', async (event, args) => {
   
   try {
      var precio_total = props.reduce((accumulator, object) => {
-      return accumulator + (object.cantidad * object.product.Precio);
+      return accumulator + (object.cantidad * object.product.Costo);
     }, 0)
     await prisma.venta.create({
       data:{
@@ -202,5 +216,79 @@ for (let obj of props){
   }
 
   //Falta restar el stock de los productos
+});
+ipcMain.on('addCompra', async (event, args) => {
+
+
+  var props = args
+ 
+  
+  try {
+     var precio_total = props.reduce((accumulator, object) => {
+      return accumulator + (object.cantidad * object.product.Precio);
+    }, 0)
+    await prisma.compra.create({
+      data:{
+          Proveedor_Id: 1,
+          Usuario_Id: 1,
+          Costo_Total: precio_total,
+          Fecha_Compra: new Date(),
+      }
+     })
+     const latestQuery = await prisma.compra.findMany({
+      orderBy: {
+          id: 'desc',
+      },
+      take: 1,
+    })
+    
+    
+for (let obj of props){
+  console.log(obj);
+  
+  await prisma.detalle_Compra.create({
+    data:{
+        Compra_Id: latestQuery[0].id,
+        Producto_Id: obj.product.id,
+        Cantidad:obj.cantidad
+    }
+   })
+
+   await prisma.producto.update({
+    where:{
+      id: obj.product.id
+    },
+    data:{
+      Inventario: obj.product.Inventario + obj.cantidad
+    }
+   })
+}
+
+
+    
+     event.returnValue = true;
+  } catch (error) {
+    console.log(error);
+    
+    event.returnValue = false;
+  }
+
+  //Falta restar el stock de los productos
+});
+
+ipcMain.on('getAllProviders', async (event, args) => {
+  var products = await prisma.proveedor.findMany();
+  
+  event.returnValue = JSON.stringify(products);
+});
+ipcMain.on('getAllMarcas', async (event, args) => {
+  var products = await prisma.marca.findMany();
+  
+  event.returnValue = JSON.stringify(products);
+});
+ipcMain.on('getAllCategorias', async (event, args) => {
+  var products = await prisma.categoria.findMany();
+  
+  event.returnValue = JSON.stringify(products);
 });
 
