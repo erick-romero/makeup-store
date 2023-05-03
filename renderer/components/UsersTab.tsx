@@ -76,7 +76,7 @@ function UsersTab() {
     <Button type="primary" onClick={showModal}>
                 Agregar Nuevo Usuario
     </Button>
-    <Modal footer={null} title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal footer={null} title="Nuevo Usuario" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
     <Form
           name="basic"
           labelCol={{ span: 8 }}
@@ -84,9 +84,7 @@ function UsersTab() {
           style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
           onFinish={onFinishUser}
-
           autoComplete="off"
-
       >
           <Form.Item
               label="Nombre"

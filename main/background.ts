@@ -104,10 +104,10 @@ ipcMain.on('getAllUsers', async (event, args) => {
 });
 
 ipcMain.on('addUser', async (event, args) => {
-var props = JSON.parse(args)
-console.log(props);
+  var props = JSON.parse(args)
+  console.log(props);
 
-try {
+  try {
   await prisma.usuario.create({
     data:{
         Tipo_Usuario_Id: parseInt(props.tipoUsuario),
@@ -118,13 +118,13 @@ try {
         contrasena: props.contrasena
     }
    })
-console.log(props);
+  console.log(props);
 
    event.returnValue = true;
-} catch (error) {
+  } catch (error) {
   console.log(error);
   event.returnValue = false;
-}
+  }
 
 
  
@@ -290,5 +290,75 @@ ipcMain.on('getAllCategorias', async (event, args) => {
   var products = await prisma.categoria.findMany();
   
   event.returnValue = JSON.stringify(products);
+});
+
+ipcMain.on('addProvider', async (event, args) => {
+  var props = JSON.parse(args)
+  console.log(props);
+
+  try {
+  await prisma.proveedor.create({
+    data:{
+        Nombre: props.nombre,
+        Correo_Electronico: props.correo,
+        Telefono: props.telefono
+        
+    }
+   })
+  console.log(props);
+
+   event.returnValue = true;
+  } catch (error) {
+  console.log(error);
+  event.returnValue = false;
+  }
+
+
+ 
+});
+
+ipcMain.on('addMarca', async (event, args) => {
+  var props = JSON.parse(args)
+  console.log(props);
+
+  try {
+  await prisma.marca.create({
+    data:{
+      Nombre: props.nombre,
+    }
+   })
+  console.log(props);
+
+   event.returnValue = true;
+  } catch (error) {
+  console.log(error);
+  event.returnValue = false;
+  }
+
+
+ 
+});
+
+ipcMain.on('addCategoria', async (event, args) => {
+  var props = JSON.parse(args)
+  console.log(props);
+
+  try {
+  await prisma.categoria.create({
+    data:{
+        Nombre: props.nombre,
+        Descripcion: props.descripcion
+    }
+   })
+  console.log(props);
+
+   event.returnValue = true;
+  } catch (error) {
+  console.log(error);
+  event.returnValue = false;
+  }
+
+
+ 
 });
 

@@ -9,9 +9,6 @@ import electron from 'electron';
 const { Header, Sider, Content } = Layout;
 const ipcRenderer = electron.ipcRenderer;
 
-  
-  
-
   const columns = [
     {
       title: 'Id',
@@ -50,6 +47,9 @@ const ipcRenderer = electron.ipcRenderer;
 function Configuracion() {
 
   const [data, setData] = useState(null)
+  const [CategoriaData, setCategoriaData] = useState([])
+  const [MarcaData, setMarcaData] = useState([])
+  const [ProveedorData, setProveedorData] = useState([])
 
   const onFinish = async (values: any) => { 
       var response = ipcRenderer.sendSync('addProduct', JSON.stringify(values));
@@ -66,6 +66,13 @@ function Configuracion() {
   useEffect(() => {
     const response = ipcRenderer.sendSync('getAllProducts', '');
     setData(JSON.parse(response));
+    const responseProviders = ipcRenderer.sendSync('getAllProviders', '');
+    setProveedorData(JSON.parse(responseProviders).map(x => {return {label:x.Nombre,value:x.id}}));
+    const responseMarca = ipcRenderer.sendSync('getAllMarcas', '');
+    setMarcaData(JSON.parse(responseMarca).map(x => {return {label:x.Nombre,value:x.id}}));
+    const responseCategoria = ipcRenderer.sendSync('getAllCategorias', '');
+    setCategoriaData(JSON.parse(responseCategoria).map(x => {return {label:x.Nombre,value:x.id}}));
+  
   },[])
 
     const [collapsed, setCollapsed] = useState(false);
@@ -178,7 +185,7 @@ function Configuracion() {
             rules={[{ required: true, message: 'Ingresa la categoria del producto' }]}
             >
             <Select 
-            options={[{value:1,label:"Labiales"}]}
+            options={CategoriaData}
             />
             </Form.Item>
             <Form.Item
@@ -187,7 +194,7 @@ function Configuracion() {
             rules={[{ required: true, message: 'Ingresa la marca del producto' }]}
             >
             <Select 
-            options={[{value:1,label:"Mac"},{value:2,label:"Sephora"}]}
+            options={MarcaData}
             
             />
             </Form.Item>
@@ -197,7 +204,7 @@ function Configuracion() {
             rules={[{ required: true, message: 'Ingresa el proveedor del producto' }]}
             >
             <Select 
-            options={[{value:1,label:"Mac"},{value:2,label:"Sephora"}]}
+            options={ProveedorData}
             />
             </Form.Item>
             <Form.Item

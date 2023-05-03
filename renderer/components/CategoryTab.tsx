@@ -27,7 +27,7 @@ function CategoryTab() {
     const [data, setData] = useState(null)
     
     function onFinishUser(values: any): void {
-        var response = ipcRenderer.sendSync('addUser', JSON.stringify(values));
+        var response = ipcRenderer.sendSync('addCategoria', JSON.stringify(values));
       if(response){
         message.success("Usuario creado Correctamente.");
         const response = ipcRenderer.sendSync('getAllCategorias', '');
@@ -62,7 +62,7 @@ function CategoryTab() {
     <Button type="primary" onClick={showModal}>
                 Agregar Nueva Categoria
     </Button>
-    <Modal footer={null} title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal footer={null} title="Nueva Categoria" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
     <Form
           name="basic"
           labelCol={{ span: 8 }}
@@ -77,46 +77,18 @@ function CategoryTab() {
           <Form.Item
               label="Nombre"
               name="nombre"
-              rules={[{ required: true, message: 'Ingresa el nombre del nuevo usuario' }]}
+              rules={[{ required: true, message: 'Ingresa el nombre de la nueva categoria' }]}
           >
               <Input />
           </Form.Item>
           <Form.Item
-              label="Apellido"
-              name="apellido"
-              rules={[{ required: true, message: 'Ingresa el apellido del nuevo usuario' }]}
+              label="Descripcion"
+              name="descripcion"
+              rules={[{ required: true, message: 'Ingresa la descripcion de la nueva categoria' }]}
           >
               <Input />
           </Form.Item>
-          <Form.Item
-              label="Correo Electronico"
-              name="correo"
-              rules={[{ required: true, message: 'Ingresa el correo electronico del nuevo usuario' }]}
-          >
-              <Input />
-          </Form.Item>
-          <Form.Item
-              label="Telefono"
-              name="telefono"
-              rules={[{ required: true, message: 'Ingresa el telefono del nuevo usuario' }]}
-          >
-              <Input />
-          </Form.Item>
-          <Form.Item
-              label="Contraseña"
-              name="contrasena"
-              rules={[{ required: true, message: 'Ingresa la contraseña del nuevo usuario' }]}
-          >
-              <Input />
-          </Form.Item>
-          <Form.Item
-              label="Tipo de Usuario"
-              name="tipoUsuario"
-              rules={[{ required: true, message: 'Ingresa la contraseña del nuevo usuario' }]}
-          >
-              <Select
-                  options={[{ value: 2, label: "Empleado" }, { value: 1, label: "Administrador" }]} />
-          </Form.Item>
+          
 
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
