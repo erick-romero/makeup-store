@@ -1,0 +1,27 @@
+name: Build/release
+
+on: push
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+      - name: Install Node.js, NPM and Yarn ⚙️
+        uses: actions/setup-node@master
+        with:
+          node-version: 16
+      - name: Build/release Electron app ⚒️
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          skip_build: false
+      - name: Archive production builds 🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist folder
+          path: dist/**
