@@ -22,7 +22,8 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
-          skip_build: true
+          skip_build: false
+          build_script_name: rebuild
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
