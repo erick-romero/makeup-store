@@ -21,9 +21,8 @@ jobs:
       - name: Build/release Electron app ⚒️
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          build_script_name: rebuild
-        with:
           github_token: ${{ secrets.github_token }}
+          build_script_name: rebuild
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
