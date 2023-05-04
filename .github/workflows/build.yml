@@ -17,13 +17,11 @@ jobs:
       - name: Install Node.js, NPM and Yarn ⚙️
         uses: actions/setup-node@master
         with:
-          node-version: 16
+          node-version: 12
       - name: Build/release Electron app ⚒️
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
-          skip_build: true
-          build_script_name: rebuild
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
