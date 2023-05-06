@@ -19,7 +19,6 @@ jobs:
         with:
           node-version: 16
       - name: Build/release Electron app ⚒️
-        run: npm run rebuild
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
