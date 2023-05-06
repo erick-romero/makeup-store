@@ -7,31 +7,40 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10' 
+          python-version: "3.10"
       - name: Install Node.js, NPM and Yarn ⚙️
         uses: actions/setup-node@master
         with:
           node-version: 16
-          cache: 'npm'
+          cache: "npm"
       - name: Install dependencies
-        run: npm i        
+        run: npm i
       - name: Release Windows
         if: runner.os == 'Windows'
         run: npm run build:win64
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+          github_token: ${{ secrets.github_token }}
       - name: Release MacOS
         if: runner.os == 'macOS'
         run: npm run build:mac
         env:
-          GH_TOKEN: ${{ secrets.github_token }}  
-          github_token: ${{ secrets.github_token }}  
+          GH_TOKEN: ${{ secrets.github_token }}
+          github_token: ${{ secrets.github_token }}
+      - name: Release Linux
+        if: runner.os == 'Linux'
+        run: npm run build:linux
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+          github_token: ${{ secrets.github_token }}    
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
-          name: dist folder
+          name: makeup-store
           path: dist/**
