@@ -9,11 +9,15 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
+      - name: Check out Git repository
         uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: Install Node.js, NPM and Yarn ⚙️
         uses: actions/setup-node@master
         with:
           node-version: 16
-          cache: 'npm'
       - name: Build/release Electron app ⚒️
         run: npm run rebuild
         uses: samuelmeuli/action-electron-builder@v1
