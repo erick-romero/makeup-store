@@ -1,6 +1,13 @@
 name: Build/release
 
-on: push
+on:
+  push:
+    paths:
+      - 'package.json' # only release when version changes
+  workflow_dispatch: # allow manual triggering of action
+  
+env:
+  GH_TOKEN: ${{ secrets.github_token }} # allow electron-builder to publish a draft release  
 
 jobs:
   release:
@@ -24,21 +31,12 @@ jobs:
       - name: Release Windows
         if: runner.os == 'Windows'
         run: npm run build:win64
-        env:
-          GH_TOKEN: ${{ secrets.github_token }}
-          github_token: ${{ secrets.github_token }}
       - name: Release MacOS
         if: runner.os == 'macOS'
         run: npm run build:mac
-        env:
-          GH_TOKEN: ${{ secrets.github_token }}
-          github_token: ${{ secrets.github_token }}
       - name: Release Linux
         if: runner.os == 'Linux'
         run: npm run build:linux
-        env:
-          GH_TOKEN: ${{ secrets.github_token }}
-          github_token: ${{ secrets.github_token }}    
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
