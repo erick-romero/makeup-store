@@ -21,10 +21,8 @@ jobs:
           cache: 'npm'    
       - name: Rebuild App
         run: npm i && npm run rebuild    
-      - name: Build/release Electron app ⚒️
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
+      - name: Release
+        run: npm run build
       - name: Archive production builds 🚀
         uses: actions/upload-artifact@v2
         with:
