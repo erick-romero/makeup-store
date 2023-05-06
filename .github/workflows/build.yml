@@ -18,7 +18,9 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 16
-          cache: 'npm'    
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm i        
       - name: Release Windows
         if: runner.os == 'Windows'
         run: npm run build:win64
