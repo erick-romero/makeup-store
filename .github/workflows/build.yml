@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 16
+      - name: Rebuild App
+        run: npm run rebuild    
       - name: Build/release Electron app ⚒️
         uses: samuelmeuli/action-electron-builder@v1
         with:
