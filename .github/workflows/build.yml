@@ -18,8 +18,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 16
-          cache: 'npm'
-      - run: npm clean-install    
+          cache: 'npm'    
       - name: Rebuild App
         run: npm i && npm run rebuild    
       - name: Build/release Electron app ⚒️
