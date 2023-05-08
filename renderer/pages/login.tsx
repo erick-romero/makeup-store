@@ -26,6 +26,7 @@ const onFinish = async (values: any) => {
     console.log(response);
     
     if(response.success){
+      localStorage.setItem("Usuario", response.user.id)
       Router.push("/ventas")
     } else {
       message.error("Las credenciales ingresadas no son correctas.")

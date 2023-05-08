@@ -1,10 +1,14 @@
-import { Button, Form, Input, Modal, Select, Table, message } from 'antd'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Popconfirm, Select, Space, Table, message } from 'antd'
 import electron from 'electron';
 
 import React, { useEffect, useState } from 'react'
 
 const ipcRenderer = electron.ipcRenderer;
-const columns = [
+
+
+function ProvidersTab() {
+  const columns = [
     {
       title: 'Id',
       dataIndex: 'id',
@@ -25,10 +29,27 @@ const columns = [
       dataIndex: 'Telefono',
       key: 'telefono',
     },
+    {
+      title: 'Accion',
+      key: 'action',
+      render: (_, item) => (
+        <><Space size="middle">
+          <Button onClick={() => showEdit(item)} icon={<EditOutlined />}></Button>
+          <Popconfirm
+            title="Estas seguro?"
+            onConfirm={()=> confirm(item.id)}
+
+            okText="Si"
+            cancelText="No"
+          >
+            <Button icon={<DeleteOutlined />}></Button>
+          </Popconfirm>
+        </Space></>
+      ),
+    },
     
   ];
-
-function ProvidersTab() {
+  function showEdit(item): any {}
     const [data, setData] = useState(null)
     
     function onFinishUser(values: any): void {

@@ -5,11 +5,14 @@ import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, 
 import { useRouter } from 'next/router';
 import Search from 'antd/lib/input/Search';
 import electron from 'electron';
+import Link from 'next/link';
+
 const ipcRenderer = electron.ipcRenderer;
 const { Header, Sider, Content } = Layout;
  interface car {
   product:any,
-  cantidad:number
+  cantidad:number,
+  usuario:number
  }
 
 
@@ -34,7 +37,7 @@ function Configuracion() {
       setIsModalOpen(false)
       return
     }
-    carritoTemp.unshift({product:selectedProd,cantidad:values.Cantidad})
+    carritoTemp.unshift({product:selectedProd,cantidad:values.Cantidad, usuario: parseInt( localStorage.getItem("Usuario"))})
     setCarrito(carritoTemp)
     setIsModalOpen(false)
 };
@@ -137,8 +140,10 @@ function Configuracion() {
             <Row>
               <Col span={14}>
               <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 200 }} />
-              <List
               
+              <Link href="/ventasHistorial">Historial de Ventas</Link>
+              
+              <List
               pagination={{pageSize:20}}
               style={{marginTop:"16px"}}
                 grid={{
@@ -157,7 +162,7 @@ function Configuracion() {
                     <Card 
                       size='small' className='cardHover' style={{ height: "150px" }}>
                       <h4>{item.Nombre}</h4>
-                      <p> {"$" + item.Costo}</p>
+                      <p> {"$" + item.Precio}</p>
                       <p> {"Existencia: " + item.Inventario}</p>
                     </Card>
                   </List.Item></>
@@ -203,9 +208,9 @@ function Configuracion() {
                       <List.Item style={{padding:"1px"}} >
                         <Card style={{width:"100%", lineHeight:"10px"}}>
                         <h4>{item.product.Nombre}</h4>
-                        <p> {"Precio Unitario: $" + item.product.Costo}</p>
+                        <p> {"Precio Unitario: $" + item.product.Precio}</p>
                         <p> {"Cantidad: " + item.cantidad}</p>
-                        <p> {"Precio Total: $" + item.cantidad * item.product.Costo }</p>
+                        <p> {"Precio Total: $" + item.cantidad * item.product.Precio }</p>
                         </Card>
                       </List.Item>
                     )}
@@ -213,7 +218,7 @@ function Configuracion() {
                   </div>
                   <div className='precioTotal'>
                       <h3>Total: $ {carrito.reduce((accumulator, object) => {
-                        return accumulator + (object.cantidad * object.product.Costo);
+                        return accumulator + (object.cantidad * object.product.Precio);
                       }, 0)}</h3>
                       <h5>Cantidad de productos: {carrito.reduce((accumulator, object) => {
                         return accumulator + (object.cantidad);

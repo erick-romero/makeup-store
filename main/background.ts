@@ -70,6 +70,54 @@ ipcMain.on('addProduct', async (event, args) => {
    
 });
 
+ipcMain.on('editProduct', async (event, args) => {
+  var props = JSON.parse(args)
+  try {
+    await prisma.producto.update({
+      where: {
+        id: parseInt(props.id)
+      },
+      data:{
+          Categoria_Id: props.categoria,
+          Nombre: props.nombre,
+          Descripcion: props.descripcion,
+          Marca_Id: props.marca,
+          Proveedor_Id: props.proveedor,
+          Costo: props.costo,
+          Precio: props.precio,
+          Inventario: props.inventario
+      }
+     })
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+  
+
+   
+});
+
+ipcMain.on('deleteProduct', async (event, args) => {
+  var props = args
+  try {
+    await prisma.producto.delete(
+      {
+        where : {
+          id: parseInt(props)
+        } 
+      }
+    )
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+  
+
+   
+});
+
 ipcMain.on('login', async (event,args) => {
     var props = JSON.parse(args)
     
@@ -162,16 +210,18 @@ ipcMain.on('addSale', async (event, args) => {
 
 
   var props = args
+
+  
  
   
   try {
      var precio_total = props.reduce((accumulator, object) => {
-      return accumulator + (object.cantidad * object.product.Costo);
+      return accumulator + (object.cantidad * object.product.Precio);
     }, 0)
     await prisma.venta.create({
       data:{
         
-          Usuario_Id: 1,
+          Usuario_Id: props[0].usuario,
           Precio_Total: precio_total,
           Fecha_Venta: new Date(),
           
@@ -225,12 +275,12 @@ ipcMain.on('addCompra', async (event, args) => {
   
   try {
      var precio_total = props.reduce((accumulator, object) => {
-      return accumulator + (object.cantidad * object.product.Precio);
+      return accumulator + (object.cantidad * object.product.Costo);
     }, 0)
     await prisma.compra.create({
       data:{
           Proveedor_Id: 1,
-          Usuario_Id: 1,
+          Usuario_Id: props[0].usuario,
           Costo_Total: precio_total,
           Fecha_Compra: new Date(),
       }
@@ -361,4 +411,52 @@ ipcMain.on('addCategoria', async (event, args) => {
 
  
 });
+
+ipcMain.on('getAllVentas', async (event, args) => {
+  var products = await prisma.venta.findMany({
+    orderBy: {
+      Fecha_Venta: 'desc',
+  },
+    include: {
+      Usuario:true,
+      Detalle_Venta: {
+        include: {
+          Producto: {
+            include: {
+              Marca:true,
+            Categoria: true,
+            Proveedor: true
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  event.returnValue = JSON.stringify(products);
+});
+ipcMain.on('getAllCompras', async (event, args) => {
+  var products = await prisma.compra.findMany({
+    orderBy: {
+      Fecha_Compra: 'desc',
+  },
+    include: {
+      Usuario:true,
+      Detalle_Compra: {
+        include: {
+          Producto: {
+            include: {
+              Marca:true,
+            Categoria: true,
+            Proveedor: true
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  event.returnValue = JSON.stringify(products);
+});
+
 
