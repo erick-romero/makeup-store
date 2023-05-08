@@ -54,7 +54,6 @@ function Configuracion() {
           <Popconfirm
             title="Estas seguro?"
             onConfirm={()=> confirm(item.id)}
-
             okText="Si"
             cancelText="No"
           >
@@ -95,9 +94,8 @@ function Configuracion() {
       precio: item.Precio,
       inventario: item.Inventario,
       id: item.id
-
     })
-    console.log("Hola");
+    
     
     showEditModal()
   }
@@ -140,6 +138,7 @@ function Configuracion() {
   useEffect(() => {
     const response = ipcRenderer.sendSync('getAllProducts', '');
     setData(JSON.parse(response));
+
     const responseProviders = ipcRenderer.sendSync('getAllProviders', '');
     setProveedorData(JSON.parse(responseProviders).map(x => {return {label:x.Nombre,value:x.id}}));
     const responseMarca = ipcRenderer.sendSync('getAllMarcas', '');
@@ -413,13 +412,11 @@ function Configuracion() {
             </Form.Item>
 
 
-
-
-    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-      <Button type="primary" htmlType="submit" >
-        Agregar
-      </Button>
-    </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit" >
+              Agregar
+            </Button>
+          </Form.Item>
             </Form>
             </Modal>
 

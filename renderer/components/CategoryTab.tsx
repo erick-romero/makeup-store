@@ -44,7 +44,43 @@ function CategoryTab() {
     },
     
   ];
-  function showEdit(item): any {}
+  const confirm = (id) => {
+    var response = ipcRenderer.sendSync('deleteCategoria',id );
+    if(response){
+      message.success('Borrado con exito');
+      const response = ipcRenderer.sendSync('getAllCategorias', '');
+      setData(JSON.parse(response));
+    } else {
+      message.error("No se pudo borrar")
+    }
+    
+  };
+  const [form] = Form.useForm(); 
+  function showEdit(item): any {
+    showEditModal()
+    console.log(item);
+    
+    form.setFieldsValue({
+      nombre: item.Nombre,
+      descripcion: item.Descripcion,
+      id: item.id,
+    })
+  }
+    
+    function onFinishEditUser(values: any): void {
+      var response = ipcRenderer.sendSync('editCategoria', JSON.stringify(values));
+      console.log(values);
+      
+    if(response){
+      message.success("Categoria editada Correctamente.");
+      const response = ipcRenderer.sendSync('getAllCategorias', '');
+      setData(JSON.parse(response));
+    } else {
+      message.error("Hubo un error, intente de nuevo");
+    }
+    setIsEditModalOpen(false)
+      
+    }
     const [data, setData] = useState(null)
     
     function onFinishUser(values: any): void {
@@ -64,7 +100,7 @@ function CategoryTab() {
         setData(JSON.parse(response));
       },[])
       const [isModalOpen, setIsModalOpen] = useState(false);
-
+      const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const showModal = () => {
       setIsModalOpen(true);
     };
@@ -75,6 +111,18 @@ function CategoryTab() {
   
     const handleCancel = () => {
       setIsModalOpen(false);
+    };
+
+    const showEditModal = () => {
+      setIsEditModalOpen(true);
+    };
+  
+    const handleEditOk = () => {
+      setIsEditModalOpen(false);
+    };
+  
+    const handleEditCancel = () => {
+      setIsEditModalOpen(false);
     };
       
   return (
@@ -95,6 +143,49 @@ function CategoryTab() {
           autoComplete="off"
 
       >
+          <Form.Item
+              label="Nombre"
+              name="nombre"
+              rules={[{ required: true, message: 'Ingresa el nombre de la nueva categoria' }]}
+          >
+              <Input />
+          </Form.Item>
+          <Form.Item
+              label="Descripcion"
+              name="descripcion"
+              rules={[{ required: true, message: 'Ingresa la descripcion de la nueva categoria' }]}
+          >
+              <Input />
+          </Form.Item>
+          
+
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                  Submit
+              </Button>
+          </Form.Item>
+      </Form>
+      </Modal>
+      <Modal footer={null} title="Editar Categoria" open={isEditModalOpen} onOk={handleEditOk} onCancel={handleEditCancel}>
+    <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          onFinish={onFinishEditUser}
+        form={form}
+          autoComplete="off"
+
+      >
+        <Form.Item
+              hidden
+              name="id"
+              
+          >
+              
+          </Form.Item>
           <Form.Item
               label="Nombre"
               name="nombre"

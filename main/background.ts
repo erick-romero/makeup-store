@@ -177,6 +177,48 @@ ipcMain.on('addUser', async (event, args) => {
 
  
 });
+ipcMain.on('editUser', async (event, args) => {
+  var props = JSON.parse(args)
+  try {
+    await prisma.usuario.update({
+      where: {
+        id: parseInt(props.id)
+      },
+      data:{
+          Tipo_Usuario_Id: props.tipoUsuario,
+          nombre: props.nombre,
+          apellido: props.apellido,
+          correo_electronico: props.correo,
+          telefono: props.telefono,
+          contrasena: props.contrasena
+      }
+     })
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+ 
+});
+ipcMain.on('deleteUser', async (event, args) => {
+  var props = args
+  try {
+    await prisma.usuario.delete(
+      {
+        where : {
+          id: parseInt(props)
+        } 
+      }
+    )
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+
+
+ 
+});
 
 ipcMain.on('getFilteredProducts', async (event, args) => {
 
@@ -207,13 +249,9 @@ ipcMain.on('getFilteredProductsByProvider', async (event, args) => {
 });
 
 ipcMain.on('addSale', async (event, args) => {
-
-
+//carrito son el argumento
   var props = args
 
-  
- 
-  
   try {
      var precio_total = props.reduce((accumulator, object) => {
       return accumulator + (object.cantidad * object.product.Precio);
@@ -388,6 +426,43 @@ ipcMain.on('addMarca', async (event, args) => {
 
  
 });
+ipcMain.on('editMarca', async (event, args) => {
+  var props = JSON.parse(args)
+  try {
+    await prisma.marca.update({
+      where: {
+        id: parseInt(props.id)
+      },
+      data:{
+          Nombre: props.nombre
+      }
+     })
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+ 
+});
+ipcMain.on('deleteMarca', async (event, args) => {
+  var props = args
+  try {
+    await prisma.marca.delete(
+      {
+        where : {
+          id: parseInt(props)
+        } 
+      }
+    )
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+
+
+ 
+});
 
 ipcMain.on('addCategoria', async (event, args) => {
   var props = JSON.parse(args)
@@ -406,6 +481,44 @@ ipcMain.on('addCategoria', async (event, args) => {
   } catch (error) {
   console.log(error);
   event.returnValue = false;
+  }
+
+
+ 
+});
+ipcMain.on('editCategoria', async (event, args) => {
+  var props = JSON.parse(args)
+  try {
+    await prisma.categoria.update({
+      where: {
+        id: parseInt(props.id)
+      },
+      data:{
+          Nombre: props.nombre,
+          Descripcion: props.descripcion
+      }
+     })
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
+  }
+ 
+});
+ipcMain.on('deleteCategoria', async (event, args) => {
+  var props = args
+  try {
+    await prisma.categoria.delete(
+      {
+        where : {
+          id: parseInt(props)
+        } 
+      }
+    )
+
+     event.returnValue = true;
+  } catch (error) {
+    event.returnValue = false;
   }
 
 

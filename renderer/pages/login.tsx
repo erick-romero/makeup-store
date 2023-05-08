@@ -21,7 +21,7 @@ const {
 const _ = require("lodash")
 const onFinish = async (values: any) => {
    
-    var response = ipcRenderer.sendSync('login', JSON.stringify(values));;
+    var response = ipcRenderer.sendSync('login', JSON.stringify(values));
     response = JSON.parse(response)
     console.log(response);
     
@@ -50,15 +50,15 @@ function Login() {
 
       <Content style={{ padding: 48 }}>
       <Form
-    name="basic"
-    labelCol={{ span: 8 }}
-    wrapperCol={{ span: 16 }}
-    style={{ maxWidth: 600 }}
-    initialValues={{ remember: true }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
-    autoComplete="off"
-  >
+        name="basic"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ maxWidth: 600 }}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
     <Form.Item
       label="Numero de Empleado"
       name="userId"
@@ -78,7 +78,7 @@ function Login() {
 
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
       <Button type="primary" htmlType="submit" className={styles.blueColor}>
-        Submit
+        Iniciar Sesion
       </Button>
     </Form.Item>
       </Form>

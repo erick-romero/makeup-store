@@ -97,7 +97,7 @@ function Configuracion() {
                            <h4>Venta #{`${item.id} `}hecha por: {`${item.Usuario.nombre} ${item.Usuario.apellido}`}</h4>
                             <ol>
                             {item.Detalle_Venta.map(x => {
-                                return <><li> {`${x.Producto.Descripcion} Precio Unitario: $${x.Producto.Precio}`} </li> <ul><li> {`cantidad: ${x.Cantidad} Precio Total: $${x.Producto.Precio * x.Cantidad}`} </li></ul></>
+                                return <><li> {`${x.Producto.Nombre} Precio Unitario: $${x.Producto.Precio}`} </li> <ul><li> {`cantidad: ${x.Cantidad} Precio Total: $${x.Producto.Precio * x.Cantidad}`} </li></ul></>
                             })}
                             </ol>
                         </CollapsePanel>
