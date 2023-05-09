@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 import electron from 'electron';
-import { Collapse, Layout, List, Menu } from 'antd';
+import { Button, Collapse, Layout, List, Menu } from 'antd';
 import CollapsePanel from 'antd/lib/collapse/CollapsePanel';
 
 
@@ -19,9 +19,72 @@ function Configuracion() {
   
     const [collapsed, setCollapsed] = useState(false);
     const [data, setData] = useState([]);
-
+    const [MenuData, setMenuData] = useState([
+      {
+        key: '1',
+        icon: <ShopOutlined />,
+        label: 'Ventas',
+        onClick : () => {
+          router.push("/ventas")
+        }
+      },
+      {
+        key: '2',
+        icon: <ShoppingCartOutlined />,
+        label: 'Compras',
+        onClick : () => {
+          router.push("/compras")
+        }
+      },
+      {
+        key: '3',
+        icon: <ScheduleOutlined />,
+        label: 'Inventario',
+        onClick : () => {
+          router.push("/inventario")
+        }
+      },
+      
+    ])
     const router = useRouter()
     useEffect(() => {
+      const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
+      if(user.user.Tipo_Usuario_Id == 1){
+        console.log("Es Admin");
+        setMenuData([{
+          key: '1',
+          icon: <ShopOutlined />,
+          label: 'Ventas',
+          onClick : () => {
+            router.push("/ventas")
+          }
+        },
+        {
+          key: '2',
+          icon: <ShoppingCartOutlined />,
+          label: 'Compras',
+          onClick : () => {
+            router.push("/compras")
+          }
+        },
+        {
+          key: '3',
+          icon: <ScheduleOutlined />,
+          label: 'Inventario',
+          onClick : () => {
+            router.push("/inventario")
+          }
+        },
+        {
+          key: '4',
+          icon: <SettingOutlined />,
+          label: 'Configuracion',
+          onClick : () => {
+            router.push("/configuracion")
+          },
+  
+        },])
+      }
         const response = ipcRenderer.sendSync('getAllCompras', '');
         setData(JSON.parse(response));
         console.log(JSON.parse(response));
@@ -37,40 +100,7 @@ function Configuracion() {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={['2']}
-            items={[
-              {
-                key: '1',
-                icon: <ShopOutlined />,
-                label: 'Ventas',
-                onClick : () => {
-                  router.push("/ventas")
-                }
-              },
-              {
-                key: '2',
-                icon: <ShoppingCartOutlined />,
-                label: 'Compras',
-                onClick : () => {
-                  router.push("/compras")
-                }
-              },
-              {
-                key: '3',
-                icon: <ScheduleOutlined />,
-                label: 'Inventario',
-                onClick : () => {
-                  router.push("/inventario")
-                }
-              },
-              {
-                key: '4',
-                icon: <SettingOutlined />,
-                label: 'Configuracion',
-                onClick : () => {
-                  router.push("/configuracion")
-                }
-              },
-            ]}
+            items={MenuData}
           />
         </Sider>
         <Layout className="site-layout">
@@ -79,6 +109,8 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
+            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+
           </Header>
           <Content
             style={{

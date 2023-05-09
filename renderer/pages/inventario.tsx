@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Button, Form, Input, InputNumber, Layout, Menu, Modal, Popconfirm, Select, Space, Table, message } from 'antd';
-import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined, EditOutlined, DeleteOutlined, LogoutOutlined } from '@ant-design/icons';
 import Router, { useRouter } from 'next/router';
 import axios from 'axios';
 import electron from 'electron';
@@ -89,7 +89,7 @@ function Configuracion() {
       descripcion: item.Descripcion,
       categoria: item.Categoria_Id,
       marca: item.Marca_Id,
-      proveedor: item.Proveedor_Id,
+      
       costo: item.Costo,
       precio: item.Precio,
       inventario: item.Inventario,
@@ -104,9 +104,36 @@ function Configuracion() {
    
   }
   const [data, setData] = useState(null)
+  const [MenuData, setMenuData] = useState([
+    {
+      key: '1',
+      icon: <ShopOutlined />,
+      label: 'Ventas',
+      onClick : () => {
+        router.push("/ventas")
+      }
+    },
+    {
+      key: '2',
+      icon: <ShoppingCartOutlined />,
+      label: 'Compras',
+      onClick : () => {
+        router.push("/compras")
+      }
+    },
+    {
+      key: '3',
+      icon: <ScheduleOutlined />,
+      label: 'Inventario',
+      onClick : () => {
+        router.push("/inventario")
+      }
+    },
+    
+  ])
   const [CategoriaData, setCategoriaData] = useState([])
   const [MarcaData, setMarcaData] = useState([])
-  const [ProveedorData, setProveedorData] = useState([])
+  
 
   const onFinish = async (values: any) => { 
       var response = ipcRenderer.sendSync('addProduct', JSON.stringify(values));
@@ -136,11 +163,47 @@ function Configuracion() {
 };
 
   useEffect(() => {
+    const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
+      if(user.user.Tipo_Usuario_Id == 1){
+        console.log("Es Admin");
+        setMenuData([{
+          key: '1',
+          icon: <ShopOutlined />,
+          label: 'Ventas',
+          onClick : () => {
+            router.push("/ventas")
+          }
+        },
+        {
+          key: '2',
+          icon: <ShoppingCartOutlined />,
+          label: 'Compras',
+          onClick : () => {
+            router.push("/compras")
+          }
+        },
+        {
+          key: '3',
+          icon: <ScheduleOutlined />,
+          label: 'Inventario',
+          onClick : () => {
+            router.push("/inventario")
+          }
+        },
+        {
+          key: '4',
+          icon: <SettingOutlined />,
+          label: 'Configuracion',
+          onClick : () => {
+            router.push("/configuracion")
+          },
+  
+        },])
+      }
     const response = ipcRenderer.sendSync('getAllProducts', '');
     setData(JSON.parse(response));
 
-    const responseProviders = ipcRenderer.sendSync('getAllProviders', '');
-    setProveedorData(JSON.parse(responseProviders).map(x => {return {label:x.Nombre,value:x.id}}));
+    
     const responseMarca = ipcRenderer.sendSync('getAllMarcas', '');
     setMarcaData(JSON.parse(responseMarca).map(x => {return {label:x.Nombre,value:x.id}}));
     const responseCategoria = ipcRenderer.sendSync('getAllCategorias', '');
@@ -186,40 +249,7 @@ function Configuracion() {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={['3']}
-            items={[
-              {
-                key: '1',
-                icon: <ShopOutlined />,
-                label: 'Ventas',
-                onClick : () => {
-                  router.push("/ventas")
-                }
-              },
-              {
-                key: '2',
-                icon: <ShoppingCartOutlined />,
-                label: 'Compras',
-                onClick : () => {
-                  router.push("/compras")
-                }
-              },
-              {
-                key: '3',
-                icon: <ScheduleOutlined />,
-                label: 'Inventario',
-                onClick : () => {
-                  router.push("/inventario")
-                }
-              },
-              {
-                key: '4',
-                icon: <SettingOutlined />,
-                label: 'Configuracion',
-                onClick : () => {
-                  router.push("/configuracion")
-                }
-              },
-            ]}
+            items={MenuData}
           />
         </Sider>
         <Layout className="site-layout">
@@ -228,6 +258,7 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
+            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{
@@ -294,15 +325,8 @@ function Configuracion() {
             
             />
             </Form.Item>
-            <Form.Item
-            label="Proveedor"
-            name="proveedor"
-            rules={[{ required: true, message: 'Ingresa el proveedor del producto' }]}
-            >
-            <Select 
-            options={ProveedorData}
-            />
-            </Form.Item>
+           
+            
             <Form.Item
             label="Costo"
             name="costo"
@@ -380,15 +404,7 @@ function Configuracion() {
             
             />
             </Form.Item>
-            <Form.Item
-            label="Proveedor"
-            name="proveedor"
-            rules={[{ required: true, message: 'Ingresa el proveedor del producto' }]}
-            >
-            <Select 
-            options={ProveedorData}
-            />
-            </Form.Item>
+            
             <Form.Item
             label="Costo"
             name="costo"

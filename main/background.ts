@@ -39,7 +39,7 @@ ipcMain.on('getAllProducts', async (event, args) => {
     var products = await prisma.producto.findMany({include: {
       Marca:true,
       Categoria: true,
-      Proveedor: true
+      
     }});
     
     event.returnValue = JSON.stringify(products);
@@ -54,7 +54,6 @@ ipcMain.on('addProduct', async (event, args) => {
           Nombre: props.nombre,
           Descripcion: props.descripcion,
           Marca_Id: props.marca,
-          Proveedor_Id: props.proveedor,
           Costo: props.costo,
           Precio: props.precio,
           Inventario: props.inventario
@@ -82,7 +81,7 @@ ipcMain.on('editProduct', async (event, args) => {
           Nombre: props.nombre,
           Descripcion: props.descripcion,
           Marca_Id: props.marca,
-          Proveedor_Id: props.proveedor,
+          
           Costo: props.costo,
           Precio: props.precio,
           Inventario: props.inventario
@@ -149,6 +148,18 @@ ipcMain.on('getAllUsers', async (event, args) => {
   }});
   
   event.returnValue = JSON.stringify(users);
+});
+ipcMain.on('getUserById', async (event, args) => {
+  var props = parseInt(args)
+  var users = await prisma.usuario.findFirst({
+    where: {
+      id: props
+    },
+    include: {
+    Tipo_Usuario:true
+  }});
+  
+  event.returnValue = JSON.stringify({user: users});
 });
 
 ipcMain.on('addUser', async (event, args) => {
@@ -225,7 +236,7 @@ ipcMain.on('getFilteredProducts', async (event, args) => {
   var products = await prisma.producto.findMany({include: {
     Marca:true,
     Categoria: true,
-    Proveedor: true
+    
   }});
   
   if(args != ""){
@@ -239,10 +250,10 @@ ipcMain.on('getFilteredProductsByProvider', async (event, args) => {
   var products = await prisma.producto.findMany({include: {
     Marca:true,
     Categoria: true,
-    Proveedor: true
+    
   }});
   console.log(products);
-  products = products.filter(x => x.Proveedor.id == args)
+  
   
 
   event.returnValue = JSON.stringify(products);
@@ -317,7 +328,6 @@ ipcMain.on('addCompra', async (event, args) => {
     }, 0)
     await prisma.compra.create({
       data:{
-          Proveedor_Id: 1,
           Usuario_Id: props[0].usuario,
           Costo_Total: precio_total,
           Fecha_Compra: new Date(),
@@ -364,11 +374,7 @@ for (let obj of props){
   //Falta restar el stock de los productos
 });
 
-ipcMain.on('getAllProviders', async (event, args) => {
-  var products = await prisma.proveedor.findMany();
-  
-  event.returnValue = JSON.stringify(products);
-});
+
 ipcMain.on('getAllMarcas', async (event, args) => {
   var products = await prisma.marca.findMany();
   
@@ -380,30 +386,7 @@ ipcMain.on('getAllCategorias', async (event, args) => {
   event.returnValue = JSON.stringify(products);
 });
 
-ipcMain.on('addProvider', async (event, args) => {
-  var props = JSON.parse(args)
-  console.log(props);
 
-  try {
-  await prisma.proveedor.create({
-    data:{
-        Nombre: props.nombre,
-        Correo_Electronico: props.correo,
-        Telefono: props.telefono
-        
-    }
-   })
-  console.log(props);
-
-   event.returnValue = true;
-  } catch (error) {
-  console.log(error);
-  event.returnValue = false;
-  }
-
-
- 
-});
 
 ipcMain.on('addMarca', async (event, args) => {
   var props = JSON.parse(args)
@@ -537,8 +520,7 @@ ipcMain.on('getAllVentas', async (event, args) => {
           Producto: {
             include: {
               Marca:true,
-            Categoria: true,
-            Proveedor: true
+            Categoria: true
             }
           }
         }
@@ -560,8 +542,7 @@ ipcMain.on('getAllCompras', async (event, args) => {
           Producto: {
             include: {
               Marca:true,
-            Categoria: true,
-            Proveedor: true
+            Categoria: true
             }
           }
         }

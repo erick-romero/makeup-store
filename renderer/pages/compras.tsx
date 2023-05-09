@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Alert, Avatar, Button, Card, Col, Form, Input, InputNumber, Layout, List, Menu, Modal, Row, Select, message } from 'antd';
-import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Search from 'antd/lib/input/Search';
 import electron from 'electron';
@@ -23,7 +23,9 @@ function Configuracion() {
     console.log(response);
     if(response){
       message.success("Compra realizada con Exito")
-      //router.reload()
+      const response = ipcRenderer.sendSync('getAllProducts', '');
+      setData(JSON.parse(response));
+      setCarrito([] as car[])
     } else {
       message.error("Hubo un error. Intenta de Nuevo")
     }
@@ -58,11 +60,7 @@ function Configuracion() {
     showModal()
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-    const response = ipcRenderer.sendSync('getFilteredProductsByProvider', value);
-    setData(JSON.parse(response));
-  };
+  
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -74,57 +72,90 @@ function Configuracion() {
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter()
     const [data, setData] = useState([])
-    const [provData, setProvData] = useState([])
+    
     const [carrito, setCarrito] = useState([] as car[])
+    const [MenuData, setMenuData] = useState([
+      {
+        key: '1',
+        icon: <ShopOutlined />,
+        label: 'Ventas',
+        onClick : () => {
+          router.push("/ventas")
+        }
+      },
+      {
+        key: '2',
+        icon: <ShoppingCartOutlined />,
+        label: 'Compras',
+        onClick : () => {
+          router.push("/compras")
+        }
+      },
+      {
+        key: '3',
+        icon: <ScheduleOutlined />,
+        label: 'Inventario',
+        onClick : () => {
+          router.push("/inventario")
+        }
+      },
+      
+    ])
     useEffect(() => {
-      const response = ipcRenderer.sendSync('getAllProviders', '');
-      setProvData(JSON.parse(response).map(x => {return {label:x.Nombre,value:x.id}}));
+      const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
+      if(user.user.Tipo_Usuario_Id == 1){
+        console.log("Es Admin");
+        setMenuData([{
+          key: '1',
+          icon: <ShopOutlined />,
+          label: 'Ventas',
+          onClick : () => {
+            router.push("/ventas")
+          }
+        },
+        {
+          key: '2',
+          icon: <ShoppingCartOutlined />,
+          label: 'Compras',
+          onClick : () => {
+            router.push("/compras")
+          }
+        },
+        {
+          key: '3',
+          icon: <ScheduleOutlined />,
+          label: 'Inventario',
+          onClick : () => {
+            router.push("/inventario")
+          }
+        },
+        {
+          key: '4',
+          icon: <SettingOutlined />,
+          label: 'Configuracion',
+          onClick : () => {
+            router.push("/configuracion")
+          },
+  
+        },])
+      }
+      const response = ipcRenderer.sendSync('getAllProducts', '');
+      setData(JSON.parse(response));
     }, [])
     
     return (
       
       <Layout>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider trigger={null} collapsible collapsed={collapsed}>    
+          
           <div className="logo" />
           <Menu
             theme="dark"
             mode="inline"
             defaultSelectedKeys={['2']}
-            items={[
-              {
-                key: '1',
-                icon: <ShopOutlined />,
-                label: 'Ventas',
-                onClick : () => {
-                  router.push("/ventas")
-                }
-              },
-              {
-                key: '2',
-                icon: <ShoppingCartOutlined />,
-                label: 'Compras',
-                onClick : () => {
-                  router.push("/compras")
-                }
-              },
-              {
-                key: '3',
-                icon: <ScheduleOutlined />,
-                label: 'Inventario',
-                onClick : () => {
-                  router.push("/inventario")
-                }
-              },
-              {
-                key: '4',
-                icon: <SettingOutlined />,
-                label: 'Configuracion',
-                onClick : () => {
-                  router.push("/configuracion")
-                }
-              },
-            ]}
+            items={MenuData}
           />
+          
         </Sider>
         <Layout className="site-layout">
           <Header style={{ padding: 0}}>
@@ -132,6 +163,8 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
+            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            
           </Header>
           <Content
             style={{
@@ -148,12 +181,7 @@ function Configuracion() {
               <Link href="/comprasHistorial">Historial de Compras</Link>
 
               <Row>
-              <Select
-              placeholder="Selecciona un Proveedor"
-              style={{ width: 300, marginTop:"10px" }}
-              onChange={handleChange}
-              options={provData}
-              />
+             
               </Row>
               
               

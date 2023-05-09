@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Alert, Avatar, Button, Card, Col, Form, Input, InputNumber, Layout, List, Menu, Modal, Row, message } from 'antd';
-import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { ShopOutlined, ShoppingCartOutlined, ScheduleOutlined, SettingOutlined, MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Search from 'antd/lib/input/Search';
 import electron from 'electron';
@@ -23,7 +23,9 @@ function Configuracion() {
     console.log(response);
     if(response){
       message.success("Venta realizada con Exito")
-      //router.reload()
+      const response = ipcRenderer.sendSync('getAllProducts', '');
+      setData(JSON.parse(response));
+      setCarrito([] as car[])
     } else {
       message.error("Hubo un error. Intenta de Nuevo")
     }
@@ -44,6 +46,33 @@ function Configuracion() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProd, setSelectedProd] = useState({Inventario:0,Nombre:""});
+  const [MenuData, setMenuData] = useState([
+    {
+      key: '1',
+      icon: <ShopOutlined />,
+      label: 'Ventas',
+      onClick : () => {
+        router.push("/ventas")
+      }
+    },
+    {
+      key: '2',
+      icon: <ShoppingCartOutlined />,
+      label: 'Compras',
+      onClick : () => {
+        router.push("/compras")
+      }
+    },
+    {
+      key: '3',
+      icon: <ScheduleOutlined />,
+      label: 'Inventario',
+      onClick : () => {
+        router.push("/inventario")
+      }
+    },
+    
+  ])
   const onSearch = (value: string) => {
     const response = ipcRenderer.sendSync('getFilteredProducts', value);
     setData(JSON.parse(response));
@@ -70,6 +99,43 @@ function Configuracion() {
     const [data, setData] = useState([])
     const [carrito, setCarrito] = useState([] as car[])
     useEffect(() => {
+      const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
+      if(user.user.Tipo_Usuario_Id == 1){
+        console.log("Es Admin");
+        setMenuData([{
+          key: '1',
+          icon: <ShopOutlined />,
+          label: 'Ventas',
+          onClick : () => {
+            router.push("/ventas")
+          }
+        },
+        {
+          key: '2',
+          icon: <ShoppingCartOutlined />,
+          label: 'Compras',
+          onClick : () => {
+            router.push("/compras")
+          }
+        },
+        {
+          key: '3',
+          icon: <ScheduleOutlined />,
+          label: 'Inventario',
+          onClick : () => {
+            router.push("/inventario")
+          }
+        },
+        {
+          key: '4',
+          icon: <SettingOutlined />,
+          label: 'Configuracion',
+          onClick : () => {
+            router.push("/configuracion")
+          },
+  
+        },])
+      }
       const response = ipcRenderer.sendSync('getAllProducts', '');
       setData(JSON.parse(response));
       
@@ -85,40 +151,7 @@ function Configuracion() {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={['1']}
-            items={[
-              {
-                key: '1',
-                icon: <ShopOutlined />,
-                label: 'Ventas',
-                onClick : () => {
-                  router.push("/ventas")
-                }
-              },
-              {
-                key: '2',
-                icon: <ShoppingCartOutlined />,
-                label: 'Compras',
-                onClick : () => {
-                  router.push("/compras")
-                }
-              },
-              {
-                key: '3',
-                icon: <ScheduleOutlined />,
-                label: 'Inventario',
-                onClick : () => {
-                  router.push("/inventario")
-                }
-              },
-              {
-                key: '4',
-                icon: <SettingOutlined />,
-                label: 'Configuracion',
-                onClick : () => {
-                  router.push("/configuracion")
-                }
-              },
-            ]}
+            items={MenuData}
           />
         </Sider>
         <Layout className="site-layout">
@@ -127,6 +160,7 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
+            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{

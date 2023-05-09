@@ -38,8 +38,6 @@ model Producto {
   Descripcion    String
   Marca_Id       Int
   Marca          Marca            @relation(fields: [Marca_Id], references: [id])
-  Proveedor_Id   Int
-  Proveedor      Proveedor        @relation(fields: [Marca_Id], references: [id])
   Costo          Decimal
   Precio         Decimal
   Inventario     Int
@@ -58,15 +56,6 @@ model Categoria {
   Nombre      String
   Descripcion String
   Producto    Producto[]
-}
-
-model Proveedor {
-  id                 Int        @id @default(autoincrement())
-  Nombre             String
-  Correo_Electronico String
-  Telefono           String
-  Producto           Producto[]
-  Compra             Compra[]
 }
 
 model Venta {
@@ -91,8 +80,6 @@ model Compra {
   id             Int              @id @default(autoincrement())
   Usuario_Id     Int
   Usuario        Usuario          @relation(fields: [Usuario_Id], references: [id])
-  Proveedor_Id   Int
-  Proveedor      Proveedor        @relation(fields: [Proveedor_Id], references: [id])
   Costo_Total    Decimal
   Fecha_Compra   DateTime
   Detalle_Compra Detalle_Compra[]

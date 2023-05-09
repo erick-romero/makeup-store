@@ -73,3 +73,10 @@
   background: grey; 
   border-radius: 10px;
 }
+
+.loginLogo {
+  background-image: url("/_next/static/media/NormalLogo.667cae63.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}

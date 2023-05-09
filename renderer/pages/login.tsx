@@ -48,18 +48,24 @@ function Login() {
         <title>login</title>
       </Head>
 
-      <Content style={{ padding: 48 }}>
-      <Form
+      <Content style={{ padding: 100, display:"flex", height:"100vh"}}>
+        <div className='loginLogo' style={{width:"50%"}}>
+
+        </div>
+        <div style={{width:"50%", display:"flex",alignContent:"center",justifyContent:"center"}}>
+        <Form
         name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout="vertical"
+        labelCol={{ span: 20 }}
+        wrapperCol={{ span: 24}}
+        style={{ maxWidth: 600, margin:"auto" }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
     <Form.Item
+    style={{textAlign:"center"}}
       label="Numero de Empleado"
       name="userId"
       rules={[{ required: true, message: 'Ingresa tu numero de empleado!' }]}
@@ -76,12 +82,14 @@ function Login() {
     </Form.Item>
 
 
-    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+    <Form.Item style={{margin:"auto"}} wrapperCol={{  span: 16 }}>
       <Button type="primary" htmlType="submit" className={styles.blueColor}>
         Iniciar Sesion
       </Button>
     </Form.Item>
       </Form>
+        </div>
+     
       </Content>
     </React.Fragment>
   );
