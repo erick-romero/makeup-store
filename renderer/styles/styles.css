@@ -75,8 +75,19 @@
 }
 
 .loginLogo {
-  background-image: url("/_next/static/media/NormalLogo.667cae63.jpeg");
+  background-image: url("../public/images/NormalLogo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  border: 1px solid black;
 
+}
+.login{
+  border: 1px solid black;
+  background-color: rgb(230, 162, 236);
+}
+
+.loginBG{
+  background-image: url("../public/images/fondo3.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }

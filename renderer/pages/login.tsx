@@ -47,12 +47,12 @@ function Login() {
       <Head>
         <title>login</title>
       </Head>
-
-      <Content style={{ padding: 100, display:"flex", height:"100vh"}}>
+      <div className='loginBG'>
+      <Content  style={{ padding: 100, display:"flex", height:"100vh"}}>
         <div className='loginLogo' style={{width:"50%"}}>
 
         </div>
-        <div style={{width:"50%", display:"flex",alignContent:"center",justifyContent:"center"}}>
+        <div className='login' style={{width:"50%", display:"flex",alignContent:"center",justifyContent:"center"}}>
         <Form
         name="basic"
         layout="vertical"
@@ -89,8 +89,9 @@ function Login() {
     </Form.Item>
       </Form>
         </div>
-     
+        
       </Content>
+      </div>
     </React.Fragment>
   );
 };
