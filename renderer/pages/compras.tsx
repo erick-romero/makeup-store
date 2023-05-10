@@ -17,7 +17,7 @@ const { Header, Sider, Content } = Layout;
 
 
 function Configuracion() {
-  function logout() {
+  function logout()  {
     router.push("/login")
   }
   function addCompra(){
@@ -165,7 +165,7 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={() => logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
             
           </Header>
           <Content

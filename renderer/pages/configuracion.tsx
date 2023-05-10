@@ -49,9 +49,7 @@ const items: TabsProps['items'] = [
 ];
 const { Header, Sider, Content } = Layout;
 function Configuracion() {
-  function logout() {
-    router.push("/login")
-  }
+  
   useEffect(() => {
     const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
       if(user.user.Tipo_Usuario_Id == 1){
@@ -121,6 +119,9 @@ function Configuracion() {
       },
       
     ])
+    function logout()  {
+      router.push("/login")
+    }
     const router = useRouter()
     return (
       <Layout>
@@ -139,7 +140,7 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={() => logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{

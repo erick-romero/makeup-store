@@ -17,9 +17,7 @@ const { Header, Sider, Content } = Layout;
 
 
 function Configuracion() {
-  function logout() {
-    router.push("/login")
-  }
+  
   function addSale(){
     const response = ipcRenderer.sendSync('addSale', carrito);
     console.log(response);
@@ -32,6 +30,10 @@ function Configuracion() {
       message.error("Hubo un error. Intenta de Nuevo")
     }
     
+  }
+
+  function logout() {
+    router.push("/login")
   }
   const onFinish = async (values: any) => { 
     console.log(values);
@@ -162,7 +164,7 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={() => logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{

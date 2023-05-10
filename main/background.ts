@@ -249,19 +249,7 @@ ipcMain.on('getFilteredProducts', async (event, args) => {
 
   event.returnValue = JSON.stringify(products);
 });
-ipcMain.on('getFilteredProductsByProvider', async (event, args) => {
 
-  var products = await prisma.producto.findMany({include: {
-    Marca:true,
-    Categoria: true,
-    
-  }});
-  console.log(products);
-  
-  
-
-  event.returnValue = JSON.stringify(products);
-});
 
 ipcMain.on('addSale', async (event, args) => {
 //carrito son el argumento
