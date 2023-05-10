@@ -436,7 +436,7 @@ function Configuracion() {
             </Form>
             </Modal>
 
-            <Table dataSource={data} columns={columns} /> 
+            <Table pagination={{pageSizeOptions:[10],}} dataSource={data} columns={columns} /> 
 
           </Content>
         </Layout>

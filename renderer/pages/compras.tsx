@@ -188,7 +188,7 @@ function Configuracion() {
               
               <List
               
-              pagination={{pageSize:20}}
+              pagination={{pageSize:9,pageSizeOptions:[10]}}
               style={{marginTop:"16px"}}
                 grid={{
                   gutter: 16,
@@ -199,13 +199,15 @@ function Configuracion() {
                   xl: 4,
                   xxl: 5,
                 }}
+                
                 dataSource={data}
                 renderItem={item => (
                   <><List.Item onClick={() => selectProduct(item)}>
-
+                    
                     <Card 
-                      size='small' className='cardHover' style={{ height: "150px" }}>
+                      size='small' className='cardHover' style={{ height: "200px" }}>
                       <h4>{item.Nombre}</h4>
+                      <p>{item.Descripcion}</p>
                       <p> {"$" + item.Costo}</p>
                       <p> {"Existencia: " + item.Inventario}</p>
                     </Card>

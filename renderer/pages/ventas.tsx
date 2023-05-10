@@ -178,7 +178,7 @@ function Configuracion() {
               <Link href="/ventasHistorial">Historial de Ventas</Link>
               
               <List
-              pagination={{pageSize:20}}
+              pagination={{pageSize:9,pageSizeOptions:[10]}}
               style={{marginTop:"16px"}}
                 grid={{
                   gutter: 16,
@@ -194,8 +194,9 @@ function Configuracion() {
                   <><List.Item onClick={() => selectProduct(item)}>
 
                     <Card 
-                      size='small' className='cardHover' style={{ height: "150px" }}>
+                      size="small" className='cardHover' style={{ height: "200px" }}>
                       <h4>{item.Nombre}</h4>
+                      <p>{item.Descripcion}</p>
                       <p> {"$" + item.Precio}</p>
                       <p> {"Existencia: " + item.Inventario}</p>
                     </Card>
@@ -235,7 +236,7 @@ function Configuracion() {
                 <div className='carrito'>
                   <div className='productos'>
                   <List
-                 
+                 pagination={{pageSizeOptions:[10]}}
                     itemLayout="horizontal"
                     dataSource={carrito}
                     renderItem={(item, index) => (

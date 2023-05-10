@@ -1,9 +1,8 @@
 import { app,ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import { PrismaClient } from "@prisma/client";
-import { log } from 'console';
 
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -18,8 +17,8 @@ if (isProd) {
   await app.whenReady();
 
   const mainWindow = createWindow('main', {
-    width: 1000,
-    height: 600,
+    width: 1200,
+    height: 800,
   });
 
   if (isProd) {

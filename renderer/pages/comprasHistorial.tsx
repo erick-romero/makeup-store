@@ -123,6 +123,7 @@ function Configuracion() {
             
             <h2>Historial de compras</h2>
             <List
+            pagination={{pageSizeOptions:[10]}}
             bordered
             dataSource={data}
             renderItem={(item) => { 
