@@ -16,7 +16,9 @@ const { Header, Sider, Content } = Layout;
 
 
 function Configuracion() {
-  
+  function logout() {
+    router.push("/login")
+  }
     const [collapsed, setCollapsed] = useState(false);
     const [data, setData] = useState([]);
     const [MenuData, setMenuData] = useState([
@@ -109,15 +111,15 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
 
           </Header>
           <Content
             style={{
               margin: '24px 16px',
               padding: 24,
-              minHeight: 280,
-              height: "100vh"
+              minHeight: "100vh",
+           
             }}
           >
             

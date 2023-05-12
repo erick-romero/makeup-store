@@ -49,6 +49,9 @@ const items: TabsProps['items'] = [
 ];
 const { Header, Sider, Content } = Layout;
 function Configuracion() {
+  function logout() {
+    router.push("/login")
+  }
   useEffect(() => {
     const user = JSON.parse(ipcRenderer.sendSync('getUserById', localStorage.getItem("Usuario")));
       if(user.user.Tipo_Usuario_Id == 1){
@@ -136,14 +139,14 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{
               margin: '24px 16px',
               padding: 24,
-              minHeight: 280,
-              height: "100vh"
+              minHeight: "100vh",
+              
             }}
           >
             <Tabs defaultActiveKey="1" items={items} onChange={onChange} />

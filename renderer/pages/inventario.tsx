@@ -14,6 +14,9 @@ const ipcRenderer = electron.ipcRenderer;
   
 
 function Configuracion() {
+  function logout() {
+    router.push("/login")
+  }
   const columns = [
     {
       title: 'Id',
@@ -243,7 +246,11 @@ function Configuracion() {
 
     return (
       <Layout>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider trigger={null} collapsible collapsed={collapsed}
+        style={{
+          
+        }}
+        >
           <div className="logo" />
           <Menu
             theme="dark"
@@ -258,14 +265,13 @@ function Configuracion() {
               className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Button href='/login' style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
+            <Button onClick={()=> logout()} style={{float:"right",margin: "16px 24px 16px 24px"}} icon={<LogoutOutlined />}/>
           </Header>
           <Content
             style={{
               margin: '24px 16px',
               padding: 24,
-              minHeight: 280,
-              height: "100vh"
+              minHeight: "100vh",
             }}
           >
 

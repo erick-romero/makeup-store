@@ -3,6 +3,7 @@ import serve from 'electron-serve';
 import { createWindow } from './helpers';
 
 import { PrismaClient } from "@prisma/client";
+import { log } from 'console';
 const prisma = new PrismaClient();
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -13,12 +14,16 @@ if (isProd) {
   app.setPath('userData', `${app.getPath('userData')} (development)`);
 }
 
+
+const fs = require('fs')
+
+
 (async () => {
   await app.whenReady();
 
   const mainWindow = createWindow('main', {
-    width: 1200,
-    height: 800,
+    width: 1000,
+    height: 600,
   });
 
   if (isProd) {
